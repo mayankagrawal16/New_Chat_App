@@ -21,7 +21,6 @@ public class Users {
         this.mail = mail;
         this.password = password;
     }
-
     public String getProfilepic() {
         return profilepic;
     }
@@ -38,7 +37,7 @@ public class Users {
         return password;
     }
 
-    public String getUserId(String key) {
+    public String getUserId() {
         return userId;
     }
 

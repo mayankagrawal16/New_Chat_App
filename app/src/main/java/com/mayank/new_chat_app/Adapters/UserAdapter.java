@@ -1,6 +1,7 @@
 package com.mayank.new_chat_app.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.mayank.new_chat_app.ChatDetailActivity;
 import com.mayank.new_chat_app.Models.Users;
 import com.mayank.new_chat_app.R;
 import com.squareup.picasso.Picasso;
@@ -35,8 +42,47 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Users users=list.get(position);
-        Picasso.get().load(users.getProfilepic()).placeholder(R.drawable.girlone).into(holder.image);
+        Picasso.get().load(users.getProfilepic()).placeholder(R.drawable.avatar).into(holder.image);
         holder.username.setText(users.getUserName());
+
+        // for showing last message wiht help of sender(sender room=sender id+receiver id) because message updated in sender and receiver id both and it is easy to get sender id with firebase
+        // OrderByChild("timestamp") arrange message in descending order of time
+        // they are arrange in ascending so change into descending order
+        // so last message occur at the top
+
+        FirebaseDatabase.getInstance().getReference().child("Chats")
+                .child(FirebaseAuth.getInstance().getUid()+users.getUserId())
+                        .orderByChild("timestamp")
+                                .limitToLast(1)
+                                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                if(snapshot.hasChildren())
+                                                {
+                                                    for(DataSnapshot dataSnapshot:snapshot.getChildren())
+                                                    {
+                                                        holder.message.setText(dataSnapshot.child("message").getValue().toString());
+                                                    }
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                            }
+                                        });
+
+        //holder.message.setText(users.getLastMessage());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i=new Intent(context, ChatDetailActivity.class);
+                i.putExtra("userId",users.getUserId());
+                i.putExtra("profilePic",users.getProfilepic());
+                i.putExtra("userName",users.getUserName());
+                context.startActivity(i);
+            }
+        });
     }
 
     @Override

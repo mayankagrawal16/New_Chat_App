@@ -39,19 +39,22 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id=item.getItemId();
+        int id = item.getItemId();
 
-        if(id==R.id.settings) {
-            Toast.makeText(this, "Setting Clicked", Toast.LENGTH_SHORT).show();
+        if (id == R.id.settings) {
+            Intent i=new Intent(MainActivity.this, SettingActivity.class);
+            startActivity(i);
             return true;
-        }
-        else if(id==R.id.Logout)
-        {
-                auth.signOut();
-                Intent i=new Intent(MainActivity.this, SignInActivity.class);
-                startActivity(i);
-                finish();
-                return true;
+        } else if (id == R.id.Logout) {
+            auth.signOut();
+            Intent i = new Intent(MainActivity.this, SignInActivity.class);
+            startActivity(i);
+            finish();
+            return true;
+        } else if (id == R.id.group_chat) {
+            Intent i=new Intent(MainActivity.this, GroupChatActivity.class);
+            startActivity(i);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

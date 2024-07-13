@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,11 +44,12 @@ public class ChatsFragment extends Fragment {
         database.getReference().child("Users").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                list.clear();
+                //list.clear();
                 for(DataSnapshot dataSnapshot:snapshot.getChildren())
                 {
                     Users users=dataSnapshot.getValue(Users.class);
-                    users.getUserId(dataSnapshot.getKey());
+                    users.setUserId(dataSnapshot.getKey());
+                    Log.d("TAG","Snapshot problem");
                     list.add(users);
                 }
                 userAdapter.notifyDataSetChanged();
