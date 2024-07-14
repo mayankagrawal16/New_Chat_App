@@ -1,7 +1,7 @@
 package com.mayank.new_chat_app;
 
 public class MessageModel {
-    String uid,message;
+    String uid,message,messageId;
     Long timestamp;
 
     public MessageModel(String uid, String message, Long timestamp) {
@@ -17,6 +17,14 @@ public class MessageModel {
     // Empty Constructor when we use firebase
 
     public MessageModel() {
+    }
+
+    public String getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
     }
 
     public String getUid() {

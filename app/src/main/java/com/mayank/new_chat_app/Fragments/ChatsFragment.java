@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -50,7 +51,11 @@ public class ChatsFragment extends Fragment {
                     Users users=dataSnapshot.getValue(Users.class);
                     users.setUserId(dataSnapshot.getKey());
                     Log.d("TAG","Snapshot problem");
-                    list.add(users);
+
+                    // logged in user not added in list and not shown in chatFragment
+                    if(!users.getUserId().equals(FirebaseAuth.getInstance().getUid())) {
+                        list.add(users);
+                    }
                 }
                 userAdapter.notifyDataSetChanged();
             }
